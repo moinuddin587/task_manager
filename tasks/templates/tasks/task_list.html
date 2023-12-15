@@ -1,0 +1,23 @@
+{% extends "tasks/base.html" %}
+
+{% block title %}My Tasks{% endblock %}
+
+{% block content %}
+<h1>Tasks</h1>
+{% for task in task_list %}
+<h2>
+    <a href="{% url 'task_detail' task.id %}">
+        {{ task.title }}
+    </a>
+</h2>
+{% for image in task.photos.all %}
+<img src="{{ image.image.url }}">
+{% endfor %}
+<p>Priority: {{ task.get_priority_display }}</p>
+<p>Complete within {{ task.due_date }}</p>
+<p class="date">
+    Created {{ task.created }} by {{ task.author }}
+</p>
+{{ task.description|truncatewords:30 }}
+{% endfor %}
+{% endblock %}
