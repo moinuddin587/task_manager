@@ -6,6 +6,9 @@ class ImageItems(admin.TabularInline):
     model = Image
 
 
+admin.site.register(Image)
+
+
 @admin.register(Task)
 class TaskAdmin(admin.ModelAdmin):
     list_display = ["title", "author", "created", "updated", "priority", "completed"]

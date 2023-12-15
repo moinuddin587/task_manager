@@ -8,18 +8,19 @@
 {% block content %}
 <div class="product-detail">
     {% for image in task.photos.all %}
+    {% if image.image %}
     <img src="{{ image.image.url }}">
+    {% endif %}
     {% endfor %}
+
     <h1><a href="{% url 'task_detail' task.id %}">{{ task.title }}</a></h1>
-    <h2>
-        <a href="#">
-            {{ product.category }}
-        </a>
-    </h2>
     <p>Priority:
     <h1>{{ task.get_priority_display }}</h1>
     </p>
     <p class="price">Deadline: {{ task.due_date }}</p>
     {{ task.description|linebreaks }}
 </div>
+<p><a href="{% url 'add_image' task.pk %}">+ Add photos</a></p>
+<p><a href="{% url 'update_task' task.pk %}">+ Edit Task</a></p>
+<a href="{% url 'delete_task' task.pk %}">Delete Task</a>
 {% endblock %}
