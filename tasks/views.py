@@ -3,12 +3,18 @@ from django.views.generic import ListView, DetailView, UpdateView, DeleteView
 from django.views.generic.edit import CreateView
 from .models import Task, Image
 from django import forms
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from .forms import ImageForm
 from django.http import Http404
+from django.contrib.auth.mixins import (
+LoginRequiredMixin,
+UserPassesTestMixin
+)
 
 
-class TaskListView(ListView):
+
+class TaskListView(LoginRequiredMixin,ListView):
     model = Task
     template_name = "tasks/task_list.html"
     context_object_name = "tasks"
@@ -29,7 +35,7 @@ class TaskListView(ListView):
         # Filter by due date
         due_date = self.request.GET.get("due_date")
         if due_date:
-            queryset = queryset.filter(due_date__date=due_date)
+            queryset = queryset.filter(due_date__exact=due_date)
 
         # Filter by priority
         priority = self.request.GET.get("priority")
@@ -43,14 +49,18 @@ class TaskListView(ListView):
             queryset = queryset.filter(completed=completed)
 
         return queryset
+    
 
-
-class TaskDetailView(DetailView):
+class TaskDetailView(LoginRequiredMixin,UserPassesTestMixin,DetailView):
     model = Task
     template_name = "tasks/task_detail.html"
+    
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
 
 
-class TaskCreateView(CreateView):
+class TaskCreateView(LoginRequiredMixin,CreateView):
     model = Task
     template_name = "tasks/new_task.html"
     fields = ["priority", "title", "description", "due_date", "completed"]
@@ -61,18 +71,26 @@ class TaskCreateView(CreateView):
         return super().form_valid(form)
 
 
-class TaskUpdateView(UpdateView):
+class TaskUpdateView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
     model = Task
     template_name = "tasks/task_edit.html"
     fields = ["priority", "title", "description", "due_date", "completed"]
+    
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
 
 
-class TaskDeleteView(DeleteView):
+class TaskDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
     model = Task
     template_name = "tasks/task_delete.html"
     success_url = reverse_lazy("task_list")
 
+    def test_func(self):
+        obj = self.get_object()
+        return obj.author == self.request.user
 
+@login_required
 def new_image(request, pk):
     task = Task.objects.get(id=pk)
     if task.author != request.user:

@@ -6,7 +6,7 @@
 {{ task.title }}
 {% endblock %}
 {% block content %}
-<div class="product-detail">
+<div class="task-detail">
     {% for image in task.photos.all %}
     {% if image.image %}
     <img src="{{ image.image.url }}">
@@ -17,7 +17,7 @@
     <p>Priority:
     <h1>{{ task.get_priority_display }}</h1>
     </p>
-    <p class="price">Deadline: {{ task.due_date }}</p>
+    <p class="deadline">Deadline: {{ task.due_date }}</p>
     {{ task.description|linebreaks }}
 </div>
 <p><a href="{% url 'add_image' task.pk %}">+ Add photos</a></p>

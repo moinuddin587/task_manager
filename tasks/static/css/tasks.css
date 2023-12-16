@@ -65,39 +65,31 @@ input[type=submit] {
     text-transform: uppercase;
 }
 
-.errorlist {
-    color: #cc0033;
-    float: left;
-    clear: both;
-    padding-left: 10px;
-}
-
-
 img {
     width: 120px;
 }
 
-.product-detail {
+.task-detail {
     text-align: justify;
 }
 
-.product-detail .price {
+.task-detail .deadline {
     color: #333;
     font-size: 28px;
     font-weight: bold;
 }
 
-.product-detail img {
-    width: 60%;
+.task-detail img {
+    width: 20%;
     float: left;
     padding: 0 20px 20px 0;
 }
 
-.product-detail h1 {
+.task-detail h1 {
     margin-bottom: 0;
 }
 
-.product-detail h2 {
+.task-detail h2 {
     margin-top: 10px;
 }
 
